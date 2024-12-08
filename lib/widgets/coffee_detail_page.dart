@@ -238,7 +238,7 @@ class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
               _isFavourite ? Icons.favorite : Icons.favorite_border,  
               color: Colors.white,  
             ),  
-            onPressed: _toggleFavourite, // Gunakan method _toggleFavourite  
+            onPressed: _toggleFavourite,
           ),  
         ],  
         backgroundColor: Colors.transparent,  
@@ -268,8 +268,8 @@ class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,  
                 children: [  
                   // Nama Produk dengan Harga  
-                  Column(  // Ganti Row dengan Column  
-                    crossAxisAlignment: CrossAxisAlignment.start,  // Atur alignment ke start  
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, 
                     children: [  
                       Text(  
                         widget.name,  
@@ -278,9 +278,9 @@ class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
                           fontWeight: FontWeight.bold,  
                         ),  
                       ),  
-                      SizedBox(height: 5), // Tambahkan sedikit jarak  
+                      SizedBox(height: 5),
                       Text(  
-                        'Rp${coffeeDetails['price'].toStringAsFixed(3)}',  // Hapus \ sebelum Rp  
+                        'Rp${coffeeDetails['price'].toStringAsFixed(3)}',
                         style: TextStyle(  
                           fontSize: 20,  
                           fontWeight: FontWeight.bold,  
@@ -337,8 +337,8 @@ class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
                   Row(  
                     children: ['Small', 'Medium', 'Large'].map((size) {  
                       return Padding(  
-                        padding: const EdgeInsets.only(right: 8.0),  
-                        child: ChoiceChip(  
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),  
+                        child: ChoiceChip.elevated(  
                           label: Text(size),  
                           selected: _selectedSize == size,  
                           onSelected: (selected) {  
@@ -424,8 +424,18 @@ class _CoffeeDetailPageState extends State<CoffeeDetailPage> {
                       // Tombol Add to Cart penuh  
                       ElevatedButton.icon(  
                         onPressed: _addToCart,  
-                        icon: Icon(Icons.shopping_cart),  
-                        label: Text('Add to Cart'),  
+                        icon: Icon(
+                          color: Colors.white,
+                          Icons.shopping_cart
+                        ),  
+                        label: Text(
+                          'Add to Cart',
+                          style: TextStyle(
+                            color: Colors.white,  
+                            fontSize: 18,  
+                            fontWeight: FontWeight.bold,  
+                          ),
+                        ),  
                         style: ElevatedButton.styleFrom(  
                           backgroundColor: Colors.green,  
                           padding: EdgeInsets.symmetric(  

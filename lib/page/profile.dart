@@ -44,81 +44,48 @@ class ProfilePage extends StatelessWidget {
             body: Padding(  
               padding: const EdgeInsets.all(20.0),  
               child: Column(  
-                crossAxisAlignment: CrossAxisAlignment.start,  
+                crossAxisAlignment: CrossAxisAlignment.center,  
                 children: [  
                   // Avatar  
-                  Center(  
-                    child: CircleAvatar(  
-                      radius: 60.0,  
-                      backgroundColor: Colors.green,  
-                      child: Text(  
-                        _getInitials(userName),  
-                        style: TextStyle(  
-                          fontSize: 40.0,  
-                          color: Colors.white,  
-                          fontWeight: FontWeight.bold,  
-                        ),  
+                  CircleAvatar(  
+                    radius: 60.0,  
+                    backgroundColor: Colors.green,  
+                    child: Text(  
+                      _getInitials(userName),  
+                      style: TextStyle(  
+                        fontSize: 40.0,  
+                        color: Colors.white,  
+                        fontWeight: FontWeight.bold,  
                       ),  
                     ),  
                   ),  
                   SizedBox(height: 20),  
-                  Center(  
-                    child: Text(  
-                      userName,  
-                      style: TextStyle(  
-                        fontSize: 24.0,  
-                        fontWeight: FontWeight.bold,  
-                      ),  
+                  
+                  // Nama Pengguna 
+                  Text(  
+                    userName,  
+                    style: TextStyle(  
+                      fontSize: 24.0,  
+                      fontWeight: FontWeight.bold,  
                     ),  
                   ),  
                   SizedBox(height: 10),  
 
                   // Email User  
-                  Center(  
-                    child: Text(  
-                      userEmail,  
-                      style: TextStyle(  
-                        fontSize: 16.0,  
-                        color: Colors.grey,  
-                      ),  
+                  Text(  
+                    userEmail,  
+                    style: TextStyle(  
+                      fontSize: 18.0,  
+                      color: Colors.grey,  
                     ),  
                   ),  
-                  SizedBox(height: 40),  
-
-                  // Pilihan Menu  
-                  Center(  
-                    child: ElevatedButton(  
-                      onPressed: () {  
-                        // Edit Profile  
-                      },  
-                      child: Text('Edit Profile'),  
-                      style: ElevatedButton.styleFrom(  
-                        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 100.0),  
-                        backgroundColor: Colors.green,  
-                        shape: RoundedRectangleBorder(  
-                          borderRadius: BorderRadius.circular(30.0),  
-                        ),  
-                      ),  
-                    ),  
-                  ),  
-                  SizedBox(height: 20),  
-                  Center(  
-                    child: ElevatedButton(  
-                      onPressed: () {  
-                        // Settings  
-                      },  
-                      child: Text('Settings'),  
-                      style: ElevatedButton.styleFrom(  
-                        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 120.0),  
-                        backgroundColor: Colors.green,  
-                        shape: RoundedRectangleBorder(  
-                          borderRadius: BorderRadius.circular(30.0),  
-                        ),  
-                      ),  
-                    ),  
-                  ),  
-                  SizedBox(height: 20),  
-                  Center(  
+                  
+                  // Spacer untuk mendorong tombol logout ke bawah
+                  Spacer(),  
+                  
+                  // Tombol Logout
+                  SizedBox(
+                    width: double.infinity,
                     child: ElevatedButton(  
                       onPressed: () async {  
                         // Hapus token untuk logout  
@@ -127,16 +94,22 @@ class ProfilePage extends StatelessWidget {
                         // Balik ke halaman login setelah logout  
                         Navigator.pushReplacementNamed(context, '/login');
                       },  
-                      child: Text('Logout'),  
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15
+                        ),
+                      ),  
                       style: ElevatedButton.styleFrom(  
-                        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 120.0),  
+                        padding: EdgeInsets.symmetric(vertical: 15.0),  
                         backgroundColor: Colors.red,  
                         shape: RoundedRectangleBorder(  
                           borderRadius: BorderRadius.circular(30.0),  
                         ),  
                       ),  
                     ),  
-                  ),  
+                  ),
                 ],  
               ),  
             ),  
