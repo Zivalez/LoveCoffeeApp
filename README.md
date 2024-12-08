@@ -16,6 +16,12 @@ Love Coffee adalah aplikasi mobile yang dirancang untuk para pecinta kopi, memun
 - MockAPI untuk Backend Simulasi
 - SharedPreferences untuk Manajemen State Lokal
 
+## Download aplikasi
+
+Platform | Download | Version | Status
+:-: | :-: | :-: | :-:
+Android | [klik disini](https://github.com/Zivalez/LoveCoffeeApp/releases/tag/v1.0.0) | 1.0.0 | released
+
 ## Cara Instalasi
 
 ### Prasyarat
