@@ -1,4 +1,3 @@
-// lib/pages/cart_page.dart  
 import 'package:flutter/material.dart';  
 import 'package:lovecoffee/model/item_model.dart';  
 import 'package:lovecoffee/services/cart_service.dart';  
@@ -45,7 +44,7 @@ class _CartPageState extends State<CartPage> {
 
   double _calculateTotal() {  
     return _cartItems.fold(  
-      0.0,   
+      0.0,  
       (total, item) => total + (item.price * item.quantity)  
     );  
   }  
@@ -65,13 +64,26 @@ class _CartPageState extends State<CartPage> {
     }  
   }  
 
-  void _updateItemQuantity(CartItem updatedItem) {  
-    setState(() {  
-      int index = _cartItems.indexWhere((item) => item.id == updatedItem.id);  
-      if (index != -1) {  
-        _cartItems[index] = updatedItem;  
+  void _updateItemQuantity(CartItem updatedItem) async {  
+    try {  
+      bool updated = await _cartService.updateCartItemQuantity(  
+        updatedItem.id.toString(),   
+        updatedItem.quantity  
+      );  
+
+      if (updated) {  
+        setState(() {  
+          int index = _cartItems.indexWhere((item) => item.id == updatedItem.id);  
+          if (index != -1) {  
+            _cartItems[index] = updatedItem;  
+          }  
+        });  
       }  
-    });  
+    } catch (e) {  
+      ScaffoldMessenger.of(context).showSnackBar(  
+        SnackBar(content: Text('Gagal update quantity: $e')),  
+      );  
+    }  
   }  
 
   @override  
@@ -89,62 +101,45 @@ class _CartPageState extends State<CartPage> {
             ? Center(child: Text(_errorMessage))  
             : _cartItems.isEmpty  
               ? ListView(  
-                  physics: AlwaysScrollableScrollPhysics(),
                   children: [  
-                    Center(child: Text('Keranjang kosong')),  
-                  ],  
-                )  
-              : Column(  
-                  children: [  
-                    Expanded(  
-                      child: ListView.builder(  
-                        physics: AlwaysScrollableScrollPhysics(),
-                        itemCount: _cartItems.length,  
-                        itemBuilder: (context, index) {  
-                          return CartTile(  
-                            cartItem: _cartItems[index],  
-                            onRemove: () => _removeItem(_cartItems[index]),  
-                            onUpdate: _updateItemQuantity,  
-                          );  
-                        },  
-                      ),  
-                    ),  
-                    Padding(  
-                      padding: const EdgeInsets.all(16.0),  
-                      child: Row(  
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,  
+                    SizedBox(height: 250),
+                    Center(  
+                      child: Column(  
+                        mainAxisAlignment: MainAxisAlignment.center,  
                         children: [  
+                          Icon(  
+                            Icons.shopping_cart_outlined,  
+                            size: 100,  
+                            color: Colors.grey,  
+                          ),  
+                          SizedBox(height: 20),  
                           Text(  
-                            'Total',  
+                            'Keranjang kosong',  
                             style: TextStyle(  
                               fontSize: 18,  
                               fontWeight: FontWeight.bold,  
                             ),  
                           ),  
                           Text(  
-                            'Rp ${_calculateTotal().toStringAsFixed(3)}',  
+                            'Silakan tambahkan produk ke keranjang',  
                             style: TextStyle(  
-                              fontSize: 18,  
-                              fontWeight: FontWeight.bold,  
-                              color: Colors.green,  
+                              color: Colors.grey,  
                             ),  
                           ),  
                         ],  
                       ),  
                     ),  
-                    Padding(  
-                      padding: const EdgeInsets.all(16.0),  
-                      child: ElevatedButton(  
-                        onPressed: _cartItems.isEmpty ? null : () {  
-                          // Logika checkout  
-                        },  
-                        child: Text('Checkout'),  
-                        style: ElevatedButton.styleFrom(  
-                          minimumSize: Size(double.infinity, 50),  
-                        ),  
-                      ),  
-                    ),  
                   ],  
+                )  
+              : ListView.builder(  
+                  itemCount: _cartItems.length,  
+                  itemBuilder: (context, index) {  
+                    return CartTile(  
+                      cartItem: _cartItems[index],  
+                      onRemove: () => _removeItem(_cartItems[index]),  
+                      onUpdate: _updateItemQuantity,  
+                    );  
+                  },  
                 ),  
       ),  
     );  

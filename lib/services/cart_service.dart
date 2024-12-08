@@ -28,6 +28,24 @@ class CartService {
     }  
   }  
 
+  Future<bool> updateCartItemQuantity(String itemId, int newQuantity) async {  
+    try {  
+      // Kirim request PUT buat update quantity  
+      final response = await http.put(  
+        Uri.parse('$baseUrl/$itemId'),  
+        headers: {'Content-Type': 'application/json'},  
+        // Kirim data quantity baru   
+        body: json.encode({'quantity': newQuantity}),  
+      );  
+
+      // Kembalikan true kalo berhasil update  
+      return response.statusCode == 200;  
+    } catch (e) {  
+      // Tangkep error apapun yang terjadi  
+      throw Exception('Error update quantity: $e');  
+    }  
+  } 
+
   // Tambah item ke cart  
   Future<CartItem?> addToCart(CartItem item) async {  
     try {  
@@ -91,4 +109,20 @@ class CartService {
       throw Exception('Error: $e');  
     }  
   }  
+
+  Future<bool> clearCart() async {  
+    try {  
+      // Ambil semua item di cart  
+      final items = await getCartItems();  
+      
+      // Hapus setiap item  
+      for (var item in items) {  
+        await removeFromCart(item.id.toString());  
+      }  
+      
+      return true;  
+    } catch (e) {  
+      throw Exception('Error clearing cart: $e');  
+    }  
+  } 
 }

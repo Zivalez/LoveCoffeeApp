@@ -9,7 +9,7 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override  
-  _HomePageState createState() => _HomePageState();  
+  _HomePageState createState() => _HomePageState();
 }  
 
 class _HomePageState extends State<HomePage> {  
@@ -128,6 +128,11 @@ class _HomePageState extends State<HomePage> {
     }  
   }  
 
+  Future<void> _refreshData() async {  
+    await _getCurrentLocation();  
+    await Future.delayed(Duration(seconds: 1));
+  }  
+
   List<Map<String, String>> _filterCoffeeItems(String category) {  
     if (category == 'All') {  
       return coffeeItems;  
@@ -153,140 +158,143 @@ class _HomePageState extends State<HomePage> {
   @override  
   Widget build(BuildContext context) {  
     return Scaffold(  
-      body: SafeArea(  
-        child: SingleChildScrollView(  
-          child: Padding(  
-            padding: const EdgeInsets.all(20.0),  
-            child: FutureBuilder<String>(  
-              future: UserInfo().getUsername(),  
-              builder: (context, snapshot) {  
-                if (snapshot.connectionState == ConnectionState.waiting) {  
-                  return const Center(child: CircularProgressIndicator());  
-                } else if (snapshot.hasError) {  
-                  return const Center(child: Text('Error loading user info'));  
-                } else {  
-                  String userName = snapshot.data ?? 'User';  
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: SingleChildScrollView(  
+            child: Padding(  
+              padding: const EdgeInsets.all(20.0),  
+              child: FutureBuilder<String>(  
+                future: UserInfo().getUsername(),  
+                builder: (context, snapshot) {  
+                  if (snapshot.connectionState == ConnectionState.waiting) {  
+                    return const Center(child: CircularProgressIndicator());  
+                  } else if (snapshot.hasError) {  
+                    return const Center(child: Text('Error loading user info'));  
+                  } else {  
+                    String userName = snapshot.data ?? 'User';  
 
-                  return Column(  
-                    crossAxisAlignment: CrossAxisAlignment.start,  
-                    children: [  
-                      Row(  
-                        children: [  
-                          CircleAvatar(  
-                            radius: 20.0,  
-                            backgroundColor: Colors.green,  
-                            child: Text(  
-                              _getInitials(userName),  
-                              style: const TextStyle(  
-                                color: Colors.white,  
-                                fontSize: 20.0,  
-                                fontWeight: FontWeight.bold,  
+                    return Column(  
+                      crossAxisAlignment: CrossAxisAlignment.start,  
+                      children: [  
+                        Row(  
+                          children: [  
+                            CircleAvatar(  
+                              radius: 20.0,  
+                              backgroundColor: Colors.green,  
+                              child: Text(  
+                                _getInitials(userName),  
+                                style: const TextStyle(  
+                                  color: Colors.white,  
+                                  fontSize: 20.0,  
+                                  fontWeight: FontWeight.bold,  
+                                ),  
                               ),  
                             ),  
-                          ),  
-                          const SizedBox(width: 20.0),  
-                          // Info Lokasi  
-                          Expanded(  
-                            child: Column(  
-                              crossAxisAlignment: CrossAxisAlignment.start,  
-                              children: [  
-                                Row(  
-                                  children: [  
-                                    const Icon(Icons.location_on_outlined),
-                                    const SizedBox(width: 5.0),  
-                                    RichText(  
-                                      text: TextSpan(  
-                                        children: [  
-                                          TextSpan(  
-                                            text: _location.contains(',') ? _location.split(',')[0] : _location, 
-                                            style: const TextStyle(  
-                                              color: Colors.black,  
-                                              fontSize: 16.0,  
-                                              fontWeight: FontWeight.bold,  
+                            const SizedBox(width: 20.0),  
+                            // Info Lokasi  
+                            Expanded(  
+                              child: Column(  
+                                crossAxisAlignment: CrossAxisAlignment.start,  
+                                children: [  
+                                  Row(  
+                                    children: [  
+                                      const Icon(Icons.location_on_outlined),
+                                      const SizedBox(width: 5.0),  
+                                      RichText(  
+                                        text: TextSpan(  
+                                          children: [  
+                                            TextSpan(  
+                                              text: _location.contains(',') ? _location.split(',')[0] : _location, 
+                                              style: const TextStyle(  
+                                                color: Colors.black,  
+                                                fontSize: 16.0,  
+                                                fontWeight: FontWeight.bold,  
+                                              ),  
                                             ),  
-                                          ),  
-                                          TextSpan(  
-                                            text: _location.contains(',') ? ', ${_location.split(',')[1]}' : '', 
-                                            style: const TextStyle(  
-                                              color: Colors.grey,  
-                                              fontSize: 16.0,  
+                                            TextSpan(  
+                                              text: _location.contains(',') ? ', ${_location.split(',')[1]}' : '', 
+                                              style: const TextStyle(  
+                                                color: Colors.grey,  
+                                                fontSize: 16.0,  
+                                              ),  
                                             ),  
-                                          ),  
-                                        ],  
+                                          ],  
+                                        ),  
                                       ),  
-                                    ),  
-                                  ],  
-                                ),  
-                                const SizedBox(height: 5.0),  
-                              ],  
+                                    ],  
+                                  ),  
+                                  const SizedBox(height: 5.0),  
+                                ],  
+                              ),  
                             ),  
-                          ),  
-                        ],  
-                      ),  
-                      const SizedBox(height: 20.0),
-                      // Sapaan di bawah avatar  
-                      Text(  
-                        getGreeting(userName),  
-                        style: const TextStyle(  
-                          fontSize: 20.0,  
-                          fontWeight: FontWeight.bold,  
+                          ],  
                         ),  
-                      ),  
-                      const SizedBox(height: 20.0),  
+                        const SizedBox(height: 20.0),
+                        // Sapaan di bawah avatar  
+                        Text(  
+                          getGreeting(userName),  
+                          style: const TextStyle(  
+                            fontSize: 20.0,  
+                            fontWeight: FontWeight.bold,  
+                          ),  
+                        ),  
+                        const SizedBox(height: 20.0),  
 
-                      // Pencarian  
-                      TextField(  
-                        decoration: InputDecoration(  
-                          hintText: "Search Menu...",  
-                          prefixIcon: const Icon(Icons.search),  
-                          border: OutlineInputBorder(  
-                            borderRadius: BorderRadius.circular(20.0),  
-                            borderSide: BorderSide.none,  
+                        // Pencarian  
+                        TextField(  
+                          decoration: InputDecoration(  
+                            hintText: "Search Menu...",  
+                            prefixIcon: const Icon(Icons.search),  
+                            border: OutlineInputBorder(  
+                              borderRadius: BorderRadius.circular(20.0),  
+                              borderSide: BorderSide.none,  
+                            ),  
+                            filled: true,  
+                            fillColor: Colors.grey.shade200,  
                           ),  
-                          filled: true,  
-                          fillColor: Colors.grey.shade200,  
+                          onChanged: (value) {  
+                          },  
                         ),  
-                        onChanged: (value) {  
-                        },  
-                      ),  
-                      const SizedBox(height: 20.0),  
-                      const Text(  
-                        'Categories',  
-                        style: TextStyle(  
-                          fontSize: 22.0,  
-                          fontWeight: FontWeight.bold,  
+                        const SizedBox(height: 20.0),  
+                        const Text(  
+                          'Categories',  
+                          style: TextStyle(  
+                            fontSize: 22.0,  
+                            fontWeight: FontWeight.bold,  
+                          ),  
                         ),  
-                      ),  
-                      const SizedBox(height: 10.0),
-                      ValueListenableBuilder<String>(  
-                        valueListenable: _selectedCategoryNotifier,  
-                        builder: (context, selectedCategory, _) {  
-                          return CategorySelector(  
-                            onCategorySelected: (category) {  
-                              _selectedCategoryNotifier.value = category;  
-                            },  
-                            selectedCategory: selectedCategory,  
-                          );  
-                        },  
-                      ),  
-                      const SizedBox(height: 20.0),  
-                      ValueListenableBuilder<String>(  
-                        valueListenable: _selectedCategoryNotifier,  
-                        builder: (context, selectedCategory, _) {  
-                          final filteredItems = _filterCoffeeItems(selectedCategory);  
-                          
-                          return CoffeeGrid(  
-                            key: ValueKey(selectedCategory), 
-                            coffeeItems: filteredItems,  
-                          );  
-                        },  
-                      ),  
-                    ],  
-                  );  
-                }  
-              },  
+                        const SizedBox(height: 10.0),
+                        ValueListenableBuilder<String>(  
+                          valueListenable: _selectedCategoryNotifier,  
+                          builder: (context, selectedCategory, _) {  
+                            return CategorySelector(  
+                              onCategorySelected: (category) {  
+                                _selectedCategoryNotifier.value = category;  
+                              },  
+                              selectedCategory: selectedCategory,  
+                            );  
+                          },  
+                        ),  
+                        const SizedBox(height: 20.0),  
+                        ValueListenableBuilder<String>(  
+                          valueListenable: _selectedCategoryNotifier,  
+                          builder: (context, selectedCategory, _) {  
+                            final filteredItems = _filterCoffeeItems(selectedCategory);  
+                            
+                            return CoffeeGrid(  
+                              key: ValueKey(selectedCategory), 
+                              coffeeItems: filteredItems,  
+                            );  
+                          },  
+                        ),  
+                      ],  
+                    );  
+                  }  
+                },  
+              ),  
             ),  
-          ),  
+          ),
         ),  
       ),  
     );  

@@ -1,5 +1,3 @@
-// lib/page/register.dart  
-
 import 'package:flutter/material.dart';  
 import 'package:lovecoffee/services/register_service.dart';
 
